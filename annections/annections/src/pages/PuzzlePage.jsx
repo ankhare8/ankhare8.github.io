@@ -16,8 +16,6 @@ export default function PuzzlePage() {
   const [mistakes, setMistakes] = useState(0);
   const gameComplete = solvedGroups.length === 4;
 
-
-  // This runs no matter what — OK
   useEffect(() => {
     fetchPuzzle(id).then(puz => {
       setPuzzle(puz);
@@ -28,31 +26,8 @@ export default function PuzzlePage() {
     });
   }, [id]);
 
-  // This also runs every time — OK
-  useEffect(() => {
-    if (selected.length === 4) {
-      setTimeout(checkSelection, 300);
-    }
-  }, [selected]);
-
-  // Helper to check answers
-  const groupsByWord = new Map(
-    puzzle?.groups.flatMap(g => g.words.map(w => [w, g])) || []
-  );
-
-  const toggleWord = (word) => {
-    if (!puzzle) return; // puzzle not loaded yet but all hooks still run
-
-    setSelected(prev =>
-      prev.includes(word)
-        ? prev.filter(w => w !== word)
-        : [...prev, word]
-    );
-  };
-
-  const checkSelection = () => {
+  const handleSubmit = () => {
     if (!puzzle) return;
-
     if (selected.length !== 4) return;
 
     const group = groupsByWord.get(selected[0]);
@@ -72,10 +47,27 @@ export default function PuzzlePage() {
     setSelected([]);
   };
 
+  const handleDeselectAll = () => setSelected([]);
+
+  // Helper to check answers
+  const groupsByWord = new Map(
+    puzzle?.groups.flatMap(g => g.words.map(w => [w, g])) || []
+  );
+
+  const toggleWord = (word) => {
+    if (!puzzle) return; // puzzle not loaded yet but all hooks still run
+
+    setSelected(prev =>
+      prev.includes(word)
+        ? prev.filter(w => w !== word)
+        : [...prev, word]
+    );
+  };
+
   const difficultyColors = {
   1: "bg-yellow-200",
   2: "bg-green-200",
-  3: "bg-blue-200",
+  3: "bg-emerald-200",
   4: "bg-purple-200"
 };
 
@@ -116,16 +108,33 @@ export default function PuzzlePage() {
             onToggle={toggleWord}
           />
 
-          <div className="mt-4">Mistakes: {mistakes} / 4</div>
+          <div className="flex gap-4 mt-6 justify-center">
+            <button
+              className="px-4 py-2 bg-emerald-600 text-white rounded-3xl hover:bg-emerald-700 disabled:bg-gray-300 disabled:text-gray-100"
+              disabled={selected.length !== 4}
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
+
+            <button
+              className="px-4 py-2 bg-gray-300 rounded-3xl  text-white  hover:bg-gray-400 disabled:bg-gray-300 disabled:text-gray-100"
+              disabled={selected.length < 1}
+              onClick={handleDeselectAll}
+            >
+              Deselect All
+            </button>
+          </div>
+          <div className="mt-4 text-center">Mistakes: {mistakes} / 4</div>
 
           {gameComplete && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
               <div className="bg-white p-6 rounded-lg shadow-lg text-center animate-fade-in">
-                <h2 className="text-2xl font-bold mb-3">Puzzle Complete!</h2>
-                <p className="mb-4">Great job! You solved all categories.</p>
+                <h2 className="text-2xl font-bold mb-3">U solved the puzzle</h2>
+                <p className="mb-4">Wowww ur so good</p>
                 <button 
                   onClick={() => window.location.reload()} 
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  className="px-4 py-2 bg-emerald-500 text-white rounded hover:bg-emerald-600"
                 >
                   Play Again
                 </button>

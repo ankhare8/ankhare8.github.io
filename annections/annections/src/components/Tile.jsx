@@ -3,10 +3,10 @@ export default function Tile({ word, selected, onClick }) {
     <button
       onClick={onClick}
       className={[
-        "p-4 rounded-lg border text-center font-medium select-none",
+        "p-8 rounded-xl border text-center select-none uppercase font-bold text-xs md:text-sm",
         "transition-all duration-200 ease-out transform",
-        selected ? "bg-blue-500 text-white border-blue-600 scale-105" : 
-                   "bg-gray-100 border-gray-300 hover:scale-105 hover:bg-gray-200"
+        selected ? "bg-emerald-800 text-white border-emerald-600 scale-105" : 
+                   "bg-emerald-50 border-emerald-300 hover:scale-105 hover:bg-emerald-200"
       ].join(" ")}
     >
       {word}
